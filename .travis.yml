@@ -18,6 +18,7 @@ after_success:
 
 deploy:
   provider: bintray
+  # curl -T <FILE.EXT> -u<BINTRAY_USER>:<API_KEY> https://api.bintray.com/content/<BINTRAY_USER>/<BINTRAY_REPO_NAME>/<YOUR_COOL_PACKAGE_NAME>/<VERSION_NAME>/<FILE_TARGET_PATH>
   file: $PACKAGE_NAME_VERSION
   user: $BINTRAY_USER
   key: $BINTRAY_API_KEY
