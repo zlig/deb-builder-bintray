@@ -1,3 +1,12 @@
+##############################################################################################
+#
+# Travis CI configuration file
+# 
+# Set the required secrets in the build settings of the project:
+#   - BINTRAY_USER
+#   - BINTRAY_API_KEY
+#
+##############################################################################################
 env:
   global:
   - PACKAGE_NAME=deb-builder-bintray
@@ -5,25 +14,30 @@ env:
   - BINTRAY_LICENSE=LGPL-2.1
 
 before_install:
-- export RELEASE_VERSION=$(cat VERSION)
-- export BUILD_VERSION=$RELEASE_VERSION.$TRAVIS_BUILD_NUMBER
-- export BUILD_DATE=$(date "+%Y%m%d")
-- export PACKAGE_NAME_VERSION=$PACKAGE_NAME-$BUILD_VERSION.deb
+  # Export variables containing versions and filename
+  - export RELEASE_VERSION=$(cat VERSION)
+  - export BUILD_VERSION=$RELEASE_VERSION.$TRAVIS_BUILD_NUMBER
+  - export BUILD_DATE=$(date "+%Y%m%d")
+  - export PACKAGE_NAME_VERSION=$PACKAGE_NAME-$BUILD_VERSION.deb
 
 script:
-- sed -i "s/__VERSION__/$BUILD_VERSION/g" $PACKAGE_NAME/DEBIAN/control
-- sed -i "s/__DATE__/$BUILD_DATE/g" $PACKAGE_NAME/DEBIAN/control
-- dpkg-deb --build $PACKAGE_NAME
-- mv $PACKAGE_NAME.deb $PACKAGE_NAME_VERSION
+  # Replace version and build number with the Debian control file
+  - sed -i "s/__VERSION__/$BUILD_VERSION/g" $PACKAGE_NAME/DEBIAN/control
+  - sed -i "s/__DATE__/$BUILD_DATE/g" $PACKAGE_NAME/DEBIAN/control
+  # Create the Debian package
+  - dpkg-deb --build $PACKAGE_NAME
+  - mv $PACKAGE_NAME.deb $PACKAGE_NAME_VERSION
 
 after_success:
-- ls -l $PACKAGE_NAME_VERSION
-- md5sum $PACKAGE_NAME_VERSION
-- sha256sum $PACKAGE_NAME_VERSION
-- export LOCAL_SHA256=$( sha256sum $PACKAGE_NAME_VERSION | cut -d " " -f1 )
-- dpkg --contents $PACKAGE_NAME_VERSION
+  # Output detail on the resulting package for debugging purpose
+  - ls -l $PACKAGE_NAME_VERSION
+  - dpkg --contents $PACKAGE_NAME_VERSION
+  - md5sum $PACKAGE_NAME_VERSION
+  - sha256sum $PACKAGE_NAME_VERSION
+  - export LOCAL_SHA256=$( sha256sum $PACKAGE_NAME_VERSION | cut -d " " -f1 )
 
 before_deploy:
+  # Set the packages name and details in the descriptor file
   - sed -i "s/__NAME__/$PACKAGE_NAME/g" bintray-descriptor.json
   - sed -i "s/__REPO_NAME__/$BINTRAY_REPO_NAME/g" bintray-descriptor.json
   - sed -i "s/__SUBJECT__/$BINTRAY_USER/g" bintray-descriptor.json
@@ -31,6 +45,7 @@ before_deploy:
   - sed -i "s/__VERSION__/$BUILD_VERSION/g" bintray-descriptor.json
 
 deploy:
+  # Upload debian packages to Bintray
   provider: bintray
   file: bintray-descriptor.json
   user: $BINTRAY_USER
