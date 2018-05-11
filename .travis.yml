@@ -15,6 +15,7 @@ script:
 - sed -i "s/__DATE__/$BUILD_DATE/g" $PACKAGE_NAME/DEBIAN/control
 - dpkg-deb --build $PACKAGE_NAME
 - mv $PACKAGE_NAME.deb $PACKAGE_NAME_VERSION
+- export LOCAL_SHA256=$( sha256sum $PACKAGE_NAME_VERSION | cut -d " " -f1 )
 
 after_success:
 - ls -l $PACKAGE_NAME_VERSION
@@ -38,6 +39,12 @@ deploy:
 after_deploy:
   # Place link to the file in download list
   - sleep 90
+  - export REMOTE_SHA256=$(curl -L -v --silent https://bintray.com/$BINTRAY_USER/$BINTRAY_REPO_NAME/download_file?file_path=Packages.gz | zcat | grep -A 3 $PACKAGE_NAME_VERSION | grep SHA256 | cut -d " " -f2)
+  - >
+    if [[ "$LOCAL_SHA25" != "$REMOTE_SHA256" ]]; then
+      echo "SHA256 sums don't match"
+      travis_terminate 0;
+    fi
   - |
     curl --silent --show-error --fail\
     -X PUT -H "Content-Type: application/json" -d'{"list_in_downloads": true}'\
