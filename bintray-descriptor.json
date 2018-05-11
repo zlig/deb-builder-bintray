@@ -18,8 +18,8 @@
 		{
 			"includePattern": "./(.[^/]*(\\.deb)$)",
 			"uploadPattern": "$1",
-			"list_in_downloads": true,
 			"matrixParams": {
+				"list_in_downloads": true,
 				"deb_distribution": "unstable",
 				"deb_component": "main",
 				"deb_architecture": "amd64"
