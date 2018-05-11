@@ -18,6 +18,7 @@
 		{
 			"includePattern": "./(.[^/]*(\\.deb)$)",
 			"uploadPattern": "$1",
+			"list_in_downloads": true,
 			"matrixParams": {
 				"deb_distribution": "unstable",
 				"deb_component": "main",
@@ -27,8 +28,6 @@
 	],
 
 	"publish": true,
-
-	"list_in_downloads": true,
 
 	"override": false
 }
