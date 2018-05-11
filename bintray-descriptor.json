@@ -6,6 +6,7 @@
 	},
 	
 	"version": {
+		"list_in_downloads": true,
 		"name": "__VERSION__",
 		"desc": "__NAME__ __VERSION__ by __SUBJECT__"
 	},
@@ -19,7 +20,6 @@
 			"includePattern": "./(.[^/]*(\\.deb)$)",
 			"uploadPattern": "$1",
 			"matrixParams": {
-				"list_in_downloads": true,
 				"deb_distribution": "unstable",
 				"deb_component": "main",
 				"deb_architecture": "amd64"
