@@ -1,6 +1,8 @@
 env:
   global:
   - PACKAGE_NAME=deb-builder-bintray
+  - BINTRAY_REPO_NAME=debian
+  - BINTRAY_LICENSE=LGPL-2.1
 
 before_install:
 - export RELEASE_VERSION=$(cat VERSION)
@@ -17,6 +19,10 @@ after_success:
 - dpkg --contents $PACKAGE_NAME_VERSION
 
 before_deploy:
+  - sed -i "s/__NAME__/$PACKAGE_NAME/g" bintray-descriptor.json
+  - sed -i "s/__REPO_NAME__/$BINTRAY_REPO_NAME/g" bintray-descriptor.json
+  - sed -i "s/__SUBJECT__/$BINTRAY_USER/g" bintray-descriptor.json
+  - sed -i "s/__LICENSE__/$BINTRAY_LICENSE/g" bintray-descriptor.json
   - sed -i "s/__VERSION__/$BUILD_VERSION/g" bintray-descriptor.json
 
 deploy:

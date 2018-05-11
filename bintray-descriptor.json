@@ -1,15 +1,15 @@
 {
 	"package": {
-		"name": "deb-builder-bintray",
-		"repo": "debian",
-		"subject": "zlig"
+		"name": "__NAME__",
+		"repo": "__REPO_NAME__",
+		"subject": "__SUBJECT__"
 	},
 	
 	"version": {
 		"name": "__VERSION__"
 	},
 
-	"licenses": ["LGPL-2.1"],
+	"licenses": ["__LICENSE__"],
 
 	"desc": "Debian package built and deployed completely automatically",
 
