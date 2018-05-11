@@ -3,8 +3,9 @@ env:
   - PACKAGE_NAME=deb-builder-bintray
 
 before_install:
+- export RELEASE_VERSION=$(cat VERSION)
 - export BUILD_VERSION=$(date "+%Y%m%d").$TRAVIS_BUILD_NUMBER
-- export PACKAGE_NAME_VERSION=$PACKAGE_NAME.$BUILD_VERSION.deb
+- export PACKAGE_NAME_VERSION=$PACKAGE_NAME-$RELEASE_VERSION.$BUILD_VERSION.deb
 
 script:
 - dpkg-deb --build $PACKAGE_NAME
