@@ -4,8 +4,8 @@ env:
 
 before_install:
 - export RELEASE_VERSION=$(cat VERSION)
-- export BUILD_VERSION=$(date "+%Y%m%d").$TRAVIS_BUILD_NUMBER
-- export PACKAGE_NAME_VERSION=$PACKAGE_NAME-$RELEASE_VERSION.$BUILD_VERSION.deb
+- export BUILD_VERSION=$RELEASE_VERSION.$(date "+%Y%m%d").$TRAVIS_BUILD_NUMBER
+- export PACKAGE_NAME_VERSION=$PACKAGE_NAME-$BUILD_VERSION.deb
 
 script:
 - dpkg-deb --build $PACKAGE_NAME
@@ -16,9 +16,12 @@ after_success:
 - md5sum $PACKAGE_NAME_VERSION
 - dpkg --contents $PACKAGE_NAME_VERSION
 
+before_deploy:
+  - sed -i "s/__VERSION__/$BUILD_VERSION/g" bintray-descriptor.json
+
 deploy:
   provider: bintray
-  file: $PACKAGE_NAME_VERSION
+  file: bintray-descriptor.json
   user: $BINTRAY_USER
   key: $BINTRAY_API_KEY
   skip_cleanup: true
