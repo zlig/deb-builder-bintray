@@ -7,7 +7,7 @@
 	
 	"version": {
 		"name": "__VERSION__",
-		"desc": "__VERSION__"
+		"desc": "__NAME__ __VERSION__ by __SUBJECT__"
 	},
 
 	"licenses": ["__LICENSE__"],
@@ -16,7 +16,7 @@
 
 	"files": [
 		{
-			"includePattern": "(.[^/]*(\\.deb)$)",
+			"includePattern": "./(.[^/]*(\\.deb)$)",
 			"uploadPattern": "$1",
 			"matrixParams": {
 				"deb_distribution": "unstable",
