@@ -15,11 +15,12 @@ script:
 - sed -i "s/__DATE__/$BUILD_DATE/g" $PACKAGE_NAME/DEBIAN/control
 - dpkg-deb --build $PACKAGE_NAME
 - mv $PACKAGE_NAME.deb $PACKAGE_NAME_VERSION
-- export LOCAL_SHA256=$( sha256sum $PACKAGE_NAME_VERSION | cut -d " " -f1 )
 
 after_success:
 - ls -l $PACKAGE_NAME_VERSION
 - md5sum $PACKAGE_NAME_VERSION
+- sha256sum $PACKAGE_NAME_VERSION
+- export LOCAL_SHA256=$( sha256sum $PACKAGE_NAME_VERSION | cut -d " " -f1 )
 - dpkg --contents $PACKAGE_NAME_VERSION
 
 before_deploy:
@@ -37,14 +38,16 @@ deploy:
   skip_cleanup: true
 
 after_deploy:
-  # Place link to the file in download list
+  # Add time delay to let the servers process the uploaded files
   - sleep 90
+  # Retrieve SHA256 sum and compare with local sum to ensure correct file uploaded
   - export REMOTE_SHA256=$(curl -L -v --silent https://bintray.com/$BINTRAY_USER/$BINTRAY_REPO_NAME/download_file?file_path=Packages.gz | zcat | grep -A 3 $PACKAGE_NAME_VERSION | grep SHA256 | cut -d " " -f2)
   - >
-    if [[ "$LOCAL_SHA25" != "$REMOTE_SHA256" ]]; then
-      echo "SHA256 sums don't match"
-      travis_terminate 0;
+    if [[ "$LOCAL_SHA256" != "$REMOTE_SHA256" ]]; then
+      echo "SHA256 sums don't match: $LOCAL_SHA256 vs $REMOTE_SHA256"
+      travis_terminate 1;
     fi
+  # Place link to the file in download list
   - |
     curl --silent --show-error --fail\
     -X PUT -H "Content-Type: application/json" -d'{"list_in_downloads": true}'\
