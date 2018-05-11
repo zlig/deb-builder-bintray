@@ -1,0 +1,24 @@
+env:
+  global:
+  - PACKAGE_NAME=deb-builder-bintray
+
+before_install:
+- export BUILD_VERSION=$(date "+%Y%m%d").$TRAVIS_BUILD_NUMBER
+- export PACKAGE_NAME_VERSION=$PACKAGE_NAME.$BUILD_VERSION.deb
+
+script:
+- dpkg-deb --build $PACKAGE_NAME
+- mv $PACKAGE_NAME.deb $PACKAGE_NAME_VERSION
+
+after_success:
+- ls -l $PACKAGE_NAME_VERSION
+- md5sum $PACKAGE_NAME_VERSION
+- dpkg --contents $PACKAGE_NAME_VERSION
+
+deploy:
+  provider: bintray
+  file: $PACKAGE_NAME_VERSION
+  user: $BINTRAY_USER
+  key: $BINTRAY_API_KEY
+  #passphrase: "Optional, if a passphrase is configured and GPG signing is used"
+  skip_cleanup: true # to upload artifacts created during the build
