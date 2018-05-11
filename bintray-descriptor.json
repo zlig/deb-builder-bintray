@@ -9,6 +9,10 @@
 		"name": "__VERSION__"
 	},
 
+	"licenses": ["LGPL-2.1"],
+
+	"desc": "Debian package built and deployed completely automatically",
+
 	"files": [
 		{
 			"includePattern": "(.[^/]*(\\.deb)$)",
@@ -20,6 +24,8 @@
 			}
 		}
 	],
+
 	"publish": true,
+
 	"override": false
 }
