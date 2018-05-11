@@ -6,10 +6,13 @@ env:
 
 before_install:
 - export RELEASE_VERSION=$(cat VERSION)
-- export BUILD_VERSION=$RELEASE_VERSION.$(date "+%Y%m%d").$TRAVIS_BUILD_NUMBER
+- export BUILD_VERSION=$RELEASE_VERSION.$TRAVIS_BUILD_NUMBER
+- export BUILD_DATE=$(date "+%Y%m%d")
 - export PACKAGE_NAME_VERSION=$PACKAGE_NAME-$BUILD_VERSION.deb
 
 script:
+- sed -i "s/__VERSION__/$BUILD_VERSION/g" $PACKAGE_NAME/DEBIAN/control
+- sed -i "s/__DATE__/$BUILD_DATE/g" $PACKAGE_NAME/DEBIAN/control
 - dpkg-deb --build $PACKAGE_NAME
 - mv $PACKAGE_NAME.deb $PACKAGE_NAME_VERSION
 

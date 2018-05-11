@@ -1,6 +1,6 @@
-Package: deb-builder
-Version: 0.1
+Package: deb-builder-bintray
+Version: __VERSION__
 Depends: bash
 Architecture: all
-Maintainer: geld.tech
-Description: Debian Packages Builder Template
+Maintainer: zlig
+Description: Debian Packages Builder Template with upload to Bintray repository using Travis CI (Build date: __DATE__)
