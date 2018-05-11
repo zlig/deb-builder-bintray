@@ -6,7 +6,8 @@
 	},
 	
 	"version": {
-		"name": "__VERSION__"
+		"name": "__VERSION__",
+		"desc": "__VERSION__"
 	},
 
 	"licenses": ["__LICENSE__"],
