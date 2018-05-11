@@ -28,5 +28,7 @@
 
 	"publish": true,
 
+	"list_in_downloads": true,
+
 	"override": false
 }
